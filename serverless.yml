@@ -1,0 +1,25 @@
+service: image-processing-lambda
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  timeout: 10
+  stage: dev
+  
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "s3:GetObject"
+            - "s3:PutObject"
+          Resource: "arn:aws:s3:::file-conversion-bucket/*"
+
+functions:
+  processFile:
+    handler: handler.processFile
+    events:
+      - httpApi:
+          path: /
+          method: get
